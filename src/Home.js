@@ -1,6 +1,8 @@
 import React , { useState} from 'react';
 import './App.css';
 import Rating from '@material-ui/lab/Rating';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 
 const Home = () => {
 
@@ -17,23 +19,43 @@ const Home = () => {
     const [vegan,setVegan] =  useState(false);
     const [rating, setRating] = useState(2);
 
-    const handleSubmit = event => {
+    function handleSubmit  (event) {
        event.preventDefault();
-        console.log(name);
-        console.log(location);
-        console.log(wifi);
-        console.log(outlets);
-        console.log(kids);
-        console.log(reward);
-        console.log(sofas);
-        console.log(order);
-        console.log(gluten);
-        console.log(vegan);
-        console.log(review);
-        console.log(rating);
-        console.log("form submitted");
-    };
-    
+
+       firebase
+         .firestore()
+         .collection('reviews')
+         .add({
+            name,
+            location,
+            review,
+            wifi,
+            outlets,
+            reward,
+            kids,
+            sofas,
+            order,
+            gluten,
+            vegan,
+            star_rating:parseInt(rating)
+         })
+         .then(()=>{
+            setName('')
+            setLocation('')
+            setReview('')
+            setWifi('')
+            setGluten('')
+            setOutlets('')
+            setOrder('')
+            setRewards('')
+            setKids('')
+            setSofas('')
+            setVegan('')
+            setRating('')
+         })
+
+       };
+
     return(
         <form onSubmit = {handleSubmit} >
             <h3>Select a Coffe or Tea shop around campus and give it a rating</h3>
@@ -120,3 +142,4 @@ const Home = () => {
     );
 };
 export default Home;
+
